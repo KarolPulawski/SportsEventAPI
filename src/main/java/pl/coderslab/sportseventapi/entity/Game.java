@@ -16,6 +16,9 @@ public class Game {
     @OneToOne
     private Team teamAway;
 
+    @OneToOne
+    private Competition competition;
+
     private Timestamp started;
 
     private Boolean active;
@@ -59,6 +62,14 @@ public class Game {
                 ", awayPenalty=" + awayPenalty +
                 ", awayPoint=" + awayPoint +
                 '}';
+    }
+
+    public Competition getCompetition() {
+        return competition;
+    }
+
+    public void setCompetition(Competition competition) {
+        this.competition = competition;
     }
 
     public Boolean getHistory() {

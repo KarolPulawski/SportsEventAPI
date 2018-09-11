@@ -62,13 +62,13 @@ public class FakeService {
             createdGame.setHomePoint(0);
             createdGame.setAwayPoint(3);
         }
-        
+
         return createdGame;
     }
 
-    public List<Game> generateGameWeekLeagueSchedule(Integer id) {
+    public List<Game> generateGameWeekLeagueSchedule(Competition competition) {
         // get from db all teams from one comptetion
-        List<Team> teams = teamServiceImpl.findTeamsByCompetitionId(id);
+        List<Team> teams = teamServiceImpl.findTeamsByCompetitionId(competition.getId());
 
         // shuffle team collection -> list
         Collections.shuffle(teams);
@@ -77,6 +77,7 @@ public class FakeService {
         List<Game> games = new ArrayList<>();
         for(int i = 0; i < teams.size()/2; i++) {
             Game game = createGame(teams.get(i*2), teams.get(i*2+1));
+            game.setCompetition(competition);
             games.add(game);
             gameServiceImpl.saveGameToDb(game);
         }
@@ -84,23 +85,25 @@ public class FakeService {
         return games;
     }
     
-    public void generateGameWeekResults(List<Game> generateGameWeekLeagueSchedule) {
+    public List<Game> generateGameWeekResults(List<Game> generateGameWeekLeagueSchedule) {
         List<Game> results = new ArrayList<>();
 
         for(Game g : generateGameWeekLeagueSchedule) {
             results.add(generateGame(g));
         }
 
-        for(Game g : generateGameWeekLeagueSchedule) {
+        for(Game g : results) {
             System.out.println(g.toString());
             g.setActive(false);
             g.setHistory(true);
             gameServiceImpl.saveGameToDb(g);
         }
+
+        return results;
     }
 
     public void runGameWeek(Competition competition) {
-        List<Game> weekGames = generateGameWeekLeagueSchedule(competition.getId());
+        List<Game> weekGames = generateGameWeekLeagueSchedule(competition);
         generateGameWeekResults(weekGames);
     }
 }
