@@ -1,12 +1,12 @@
 package pl.coderslab.sportseventapi.service;
 
 import com.github.javafaker.Faker;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import pl.coderslab.sportseventapi.entity.Competition;
 import pl.coderslab.sportseventapi.entity.Game;
+import pl.coderslab.sportseventapi.entity.Odd;
 import pl.coderslab.sportseventapi.entity.Team;
 import pl.coderslab.sportseventapi.service.impl.GameServiceImpl;
+import pl.coderslab.sportseventapi.service.impl.OddServiceImpl;
 import pl.coderslab.sportseventapi.service.impl.TeamServiceImpl;
 
 import java.util.ArrayList;
@@ -18,11 +18,13 @@ public class FakeService {
     private TeamServiceImpl teamServiceImpl;
     private Faker faker;
     private GameServiceImpl gameServiceImpl;
+    private OddServiceImpl oddServiceImpl;
 
-    public FakeService(TeamServiceImpl teamServiceImpl, GameServiceImpl gameServiceImpl) {
+    public FakeService(TeamServiceImpl teamServiceImpl, GameServiceImpl gameServiceImpl, OddServiceImpl oddServiceImpl) {
         this.teamServiceImpl = teamServiceImpl;
         this.faker = new Faker();
         this.gameServiceImpl = gameServiceImpl;
+        this.oddServiceImpl = oddServiceImpl;
     }
 
     public FakeService() {
@@ -34,6 +36,10 @@ public class FakeService {
         game.setTeamAway(teamAway);
         game.setActive(false);
         game.setHistory(false);
+        game.setStarted(DateService.currentTimeWithDelay(5000));
+
+        Odd odd = new Odd(0.0,0.0,0.0);
+        game.setOdd(oddServiceImpl.saveOdd(odd));
         return game;
     }
 
@@ -105,5 +111,18 @@ public class FakeService {
     public void runGameWeek(Competition competition) {
         List<Game> weekGames = generateGameWeekLeagueSchedule(competition);
         generateGameWeekResults(weekGames);
+    }
+
+    public void generateOdds(List<Game> games) {
+        for(Game g : games) {
+
+//            Odd odd = new Odd();
+
+
+
+
+
+
+        }
     }
 }

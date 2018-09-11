@@ -19,6 +19,9 @@ public class Game {
     @OneToOne
     private Competition competition;
 
+    @OneToOne
+    private Odd odd;
+
     private Timestamp started;
 
     private Boolean active;
@@ -38,6 +41,7 @@ public class Game {
     private int awayPoint;
 
     public Game() {
+
     }
 
     @Override
@@ -46,6 +50,10 @@ public class Game {
                 "id=" + id +
                 ", teamHome=" + teamHome.getName() +
                 ", teamAway=" + teamAway.getName() +
+                ", competition=" + competition.getName() +
+                ", odd Home=" + odd.getHomeOdd() +
+                ", odd Draw=" + odd.getDrawOdd() +
+                ", odd Away=" + odd.getAwayOdd() +
                 ", started=" + started +
                 ", active=" + active +
                 ", history=" + history +
@@ -62,6 +70,16 @@ public class Game {
                 ", awayPenalty=" + awayPenalty +
                 ", awayPoint=" + awayPoint +
                 '}';
+    }
+
+
+
+    public Odd getOdd() {
+        return odd;
+    }
+
+    public void setOdd(Odd odd) {
+        this.odd = odd;
     }
 
     public Competition getCompetition() {

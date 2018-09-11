@@ -13,6 +13,7 @@ import pl.coderslab.sportseventapi.repository.TeamRepository;
 import pl.coderslab.sportseventapi.service.FakeService;
 import pl.coderslab.sportseventapi.service.JsonService;
 import pl.coderslab.sportseventapi.service.impl.GameServiceImpl;
+import pl.coderslab.sportseventapi.service.impl.OddServiceImpl;
 import pl.coderslab.sportseventapi.service.impl.TeamServiceImpl;
 
 import java.util.ArrayList;
@@ -29,6 +30,9 @@ public class HomeController {
     private GameServiceImpl gameServiceImpl;
 
     @Autowired
+    private OddServiceImpl oddServiceImpl;
+
+    @Autowired
     private JsonService jsonService;
 
     @Autowired
@@ -40,7 +44,7 @@ public class HomeController {
         Competition competition = new Competition();
         competition.setId(1);
         competition.setName("Premier League");
-        FakeService fs = new FakeService(teamServiceImpl, gameServiceImpl);
+        FakeService fs = new FakeService(teamServiceImpl, gameServiceImpl, oddServiceImpl);
         fs.runGameWeek(competition);
         return "login_page";
     }
@@ -49,7 +53,7 @@ public class HomeController {
     @ResponseBody
     public String gameWeekSchedule(Model model) {
 
-        FakeService fs = new FakeService(teamServiceImpl, gameServiceImpl);
+        FakeService fs = new FakeService(teamServiceImpl, gameServiceImpl, oddServiceImpl);
         Competition competition = new Competition();
         competition.setId(1);
         competition.setName("Premier League");
@@ -80,7 +84,7 @@ public class HomeController {
 //        List<Game> games = (List<Game>) request.getAttribute("games");
         List<Game> games = gameServiceImpl.getAllScheduledGames();
 
-        FakeService fs = new FakeService(teamServiceImpl, gameServiceImpl);
+        FakeService fs = new FakeService(teamServiceImpl, gameServiceImpl, oddServiceImpl);
         List<Game> results = fs.generateGameWeekResults(games);
 //        List<Game> results = gameServiceImpl.getAllScheduledGames();
 //        StringBuilder sb = new StringBuilder();
