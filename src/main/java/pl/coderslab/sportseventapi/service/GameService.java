@@ -1,9 +1,11 @@
 package pl.coderslab.sportseventapi.service;
 
+import org.springframework.stereotype.Service;
 import pl.coderslab.sportseventapi.entity.Game;
 
 import java.util.List;
 
+@Service
 public interface GameService {
     void saveGameToDb(Game game);
 

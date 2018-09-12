@@ -1,6 +1,7 @@
 package pl.coderslab.sportseventapi.service;
 
 import com.github.javafaker.Faker;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.coderslab.sportseventapi.entity.Competition;
 import pl.coderslab.sportseventapi.entity.Game;
@@ -14,21 +15,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Service
 public class FakeService {
 
-    private TeamServiceImpl teamServiceImpl;
     private Faker faker;
-    private GameServiceImpl gameServiceImpl;
+
+    @Autowired
+    private TeamServiceImpl teamServiceImpl;
+
+    @Autowired
     private OddServiceImpl oddServiceImpl;
 
-    public FakeService(TeamServiceImpl teamServiceImpl, GameServiceImpl gameServiceImpl, OddServiceImpl oddServiceImpl) {
-        this.teamServiceImpl = teamServiceImpl;
-        this.faker = new Faker();
-        this.gameServiceImpl = gameServiceImpl;
-        this.oddServiceImpl = oddServiceImpl;
-    }
+    @Autowired
+    private GameServiceImpl gameServiceImpl;
 
     public FakeService() {
+        this.faker = new Faker();
     }
 
     public Game createGame(Team teamHome, Team teamAway) {

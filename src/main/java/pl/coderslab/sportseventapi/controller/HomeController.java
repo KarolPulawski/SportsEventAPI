@@ -39,25 +39,27 @@ public class HomeController {
     @Autowired
     private CompetitionRepository cr;
 
+    @Autowired
+    private FakeService fakeService;
+
     @RequestMapping(method = RequestMethod.GET, path = "/hello")
     @ResponseBody
     public String hello() {
         Competition competition = new Competition();
         competition.setId(1);
         competition.setName("Premier League");
-        FakeService fs = new FakeService(teamServiceImpl, gameServiceImpl, oddServiceImpl);
-        fs.runGameWeek(competition);
+        fakeService.runGameWeek(competition);
         return "login_page";
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/gameWeekSchedule")
     public String gameWeekSchedule(Model model) {
 
-        FakeService fs = new FakeService(teamServiceImpl, gameServiceImpl, oddServiceImpl);
+//        FakeService fs = new FakeService(teamServiceImpl, gameServiceImpl, oddServiceImpl);
         Competition competition = new Competition();
         competition.setId(1);
         competition.setName("Premier League");
-        fs.generateGameWeekLeagueSchedule(competition);
+        fakeService.generateGameWeekLeagueSchedule(competition);
 
         // RETURN GAME WHICH ARE SCHEDULED
         List<Game> games = gameServiceImpl.getAllScheduledGames();
@@ -71,8 +73,8 @@ public class HomeController {
 
         List<Game> games = gameServiceImpl.getAllScheduledGames();
 
-        FakeService fs = new FakeService(teamServiceImpl, gameServiceImpl, oddServiceImpl);
-        List<Game> results = fs.generateGameWeekResults(games);
+//        FakeService fs = new FakeService(teamServiceImpl, gameServiceImpl, oddServiceImpl);
+        List<Game> results = fakeService.generateGameWeekResults(games);
 
         List<Competition> competitions = cr.findAll();
         for(Competition c : competitions) {

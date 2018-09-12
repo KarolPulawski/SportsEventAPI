@@ -6,6 +6,7 @@ import pl.coderslab.sportseventapi.entity.Team;
 
 import java.util.List;
 
+@Service
 public interface TeamService {
     List<Team> findTeamsByCompetition(Competition competition);
 

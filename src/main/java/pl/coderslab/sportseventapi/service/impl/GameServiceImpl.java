@@ -1,5 +1,6 @@
 package pl.coderslab.sportseventapi.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.coderslab.sportseventapi.entity.Game;
 import pl.coderslab.sportseventapi.repository.GameRepository;
@@ -10,11 +11,12 @@ import java.util.List;
 @Service
 public class GameServiceImpl implements GameService {
 
+    @Autowired
     private GameRepository gameRepository;
 
-    public GameServiceImpl(GameRepository gameRepository) {
-        this.gameRepository = gameRepository;
-    }
+//    public GameServiceImpl(GameRepository gameRepository) {
+//        this.gameRepository = gameRepository;
+//    }
 
     @Override
     public void saveGameToDb(Game game) {
