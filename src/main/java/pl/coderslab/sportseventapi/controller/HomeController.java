@@ -1,6 +1,7 @@
 package pl.coderslab.sportseventapi.controller;
 
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +20,7 @@ import pl.coderslab.sportseventapi.service.impl.TeamServiceImpl;
 import java.util.ArrayList;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/home")
 public class HomeController {
 
@@ -50,7 +51,6 @@ public class HomeController {
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/gameWeekSchedule")
-    @ResponseBody
     public String gameWeekSchedule(Model model) {
 
         FakeService fs = new FakeService(teamServiceImpl, gameServiceImpl, oddServiceImpl);
@@ -59,39 +59,20 @@ public class HomeController {
         competition.setName("Premier League");
         fs.generateGameWeekLeagueSchedule(competition);
 
-
-//        List<Game> games = gameServiceImpl.getAllScheduledGames();
-//        StringBuilder sb = new StringBuilder();
-//
-//        for(Game g : games) {
-//            sb.append(g.toString()).append(" | ");
-//        }
-
         // RETURN GAME WHICH ARE SCHEDULED
         List<Game> games = gameServiceImpl.getAllScheduledGames();
-        StringBuilder sb = new StringBuilder();
-        for(Game g : games) {
-            sb.append(g.toString()).append(" | ");
-        }
-        model.addAttribute("games", games);
-        return sb.toString();
+
+        jsonService.createJsonFromGameList(games);
+        return jsonService.getJsonGames().toString();
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/gameWeekResults")
-    @ResponseBody
     public String gameWeekResults(HttpServletRequest request) {
 
-//        List<Game> games = (List<Game>) request.getAttribute("games");
         List<Game> games = gameServiceImpl.getAllScheduledGames();
 
         FakeService fs = new FakeService(teamServiceImpl, gameServiceImpl, oddServiceImpl);
         List<Game> results = fs.generateGameWeekResults(games);
-//        List<Game> results = gameServiceImpl.getAllScheduledGames();
-//        StringBuilder sb = new StringBuilder();
-//        for(Game g : results) {
-//            sb.append(g.toString()).append(" | ");
-//        }
-
 
         List<Competition> competitions = cr.findAll();
         for(Competition c : competitions) {

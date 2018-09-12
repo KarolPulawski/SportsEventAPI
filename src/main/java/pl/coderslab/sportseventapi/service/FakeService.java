@@ -1,6 +1,7 @@
 package pl.coderslab.sportseventapi.service;
 
 import com.github.javafaker.Faker;
+import org.springframework.stereotype.Service;
 import pl.coderslab.sportseventapi.entity.Competition;
 import pl.coderslab.sportseventapi.entity.Game;
 import pl.coderslab.sportseventapi.entity.Odd;
