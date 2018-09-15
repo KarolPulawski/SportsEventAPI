@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface CompetitionRepository extends JpaRepository<Competition, Integer> {
-
+    List<Competition> findAllByEnabled();
 }

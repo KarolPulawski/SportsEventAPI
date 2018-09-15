@@ -12,4 +12,6 @@ public interface GameService {
     List<Game> getAllActiveGame();
 
     List<Game> getAllScheduledGames();
+
+    List<Game> getLastGameWeekResults();
 }

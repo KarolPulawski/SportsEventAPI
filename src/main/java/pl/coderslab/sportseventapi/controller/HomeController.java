@@ -48,20 +48,13 @@ public class HomeController {
         Competition competition = new Competition();
         competition.setId(1);
         competition.setName("Premier League");
-        fakeService.runGameWeek(competition);
+//        fakeService.runGameWeek(competition);
         return "login_page";
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/gameWeekSchedule")
     public String gameWeekSchedule(Model model) {
 
-////        FakeService fs = new FakeService(teamServiceImpl, gameServiceImpl, oddServiceImpl);
-//        Competition competition = new Competition();
-//        competition.setId(1);
-//        competition.setName("Premier League");
-//        fakeService.generateGameWeekLeagueSchedule(competition);
-
-        // RETURN GAME WHICH ARE SCHEDULED
         List<Game> games = gameServiceImpl.getAllScheduledGames();
 
         jsonService.createJsonFromGameList(games);
@@ -69,18 +62,14 @@ public class HomeController {
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/gameWeekResults")
-    public String gameWeekResults(HttpServletRequest request) {
+    public String gameWeekResults() {
 
-        List<Game> games = gameServiceImpl.getAllScheduledGames();
-
-//        FakeService fs = new FakeService(teamServiceImpl, gameServiceImpl, oddServiceImpl);
-        List<Game> results = fakeService.generateGameWeekResults(games);
+        List<Game> results = gameServiceImpl.getAllActiveGame();
 
         List<Competition> competitions = cr.findAll();
         for(Competition c : competitions) {
             System.out.println(c.getName());
         }
-
 
         jsonService.createJsonFromGameList(results);
         return jsonService.getJsonGames().toString();

@@ -11,6 +11,8 @@ public class Competition {
 
     private String name;
 
+    private boolean enabled;
+
     public Competition() {
     }
 
@@ -30,4 +32,11 @@ public class Competition {
         this.name = name;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 }

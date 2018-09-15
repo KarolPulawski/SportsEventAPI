@@ -32,4 +32,9 @@ public class GameServiceImpl implements GameService {
     public List<Game> getAllScheduledGames() {
         return gameRepository.findAllByActiveFalseAndHistoryFalse();
     }
+
+    @Override
+    public List<Game> getLastGameWeekResults() {
+        return null;
+    }
 }

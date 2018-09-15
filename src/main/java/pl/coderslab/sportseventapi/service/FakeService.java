@@ -76,12 +76,12 @@ public class FakeService {
         return createdGame;
     }
 
-    @Scheduled(cron = "0 * * * * ?")
-    public void regeneratePremierLeague() {
-        Competition competition = new Competition();
-        competition.setId(1);
-        generateGameWeekLeagueSchedule(competition);
-    }
+//    @Scheduled(cron = "0 * * * * ?")
+//    public void regeneratePremierLeague() {
+//        Competition competition = new Competition();
+//        competition.setId(1);
+//        generateGameWeekLeagueSchedule(competition);
+//    }
 
 
     public List<Game> generateGameWeekLeagueSchedule(Competition competition) {
@@ -120,10 +120,19 @@ public class FakeService {
         return results;
     }
 
-    public void runGameWeek(Competition competition) {
+    @Scheduled(cron = "0 * * * * ?")
+    public void runGameWeek() {
+        Competition competition = new Competition();
+        competition.setId(1);
         List<Game> weekGames = generateGameWeekLeagueSchedule(competition);
+        try {
+            Thread.sleep(30_000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         generateGameWeekResults(weekGames);
     }
+
 
     public void generateOdds(List<Game> games) {
         for(Game g : games) {
