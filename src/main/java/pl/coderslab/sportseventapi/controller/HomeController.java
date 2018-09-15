@@ -55,11 +55,11 @@ public class HomeController {
     @RequestMapping(method = RequestMethod.GET, path = "/gameWeekSchedule")
     public String gameWeekSchedule(Model model) {
 
-//        FakeService fs = new FakeService(teamServiceImpl, gameServiceImpl, oddServiceImpl);
-        Competition competition = new Competition();
-        competition.setId(1);
-        competition.setName("Premier League");
-        fakeService.generateGameWeekLeagueSchedule(competition);
+////        FakeService fs = new FakeService(teamServiceImpl, gameServiceImpl, oddServiceImpl);
+//        Competition competition = new Competition();
+//        competition.setId(1);
+//        competition.setName("Premier League");
+//        fakeService.generateGameWeekLeagueSchedule(competition);
 
         // RETURN GAME WHICH ARE SCHEDULED
         List<Game> games = gameServiceImpl.getAllScheduledGames();

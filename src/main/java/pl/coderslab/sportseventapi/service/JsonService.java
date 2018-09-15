@@ -37,6 +37,9 @@ public class JsonService {
             jObject.put("awayRed", g.getAwayRed());
             jObject.put("awayPenalty", g.getAwayPenalty());
             jObject.put("awayPoint", g.getAwayPoint());
+            jObject.put("homeOdd", g.getOdd().getHomeOdd());
+            jObject.put("drawOdd", g.getOdd().getDrawOdd());
+            jObject.put("awayOdd", g.getOdd().getAwayOdd());
             jsonFromGameList.add(jObject);
         }
     }

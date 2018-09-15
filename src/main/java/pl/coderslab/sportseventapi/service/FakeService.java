@@ -2,6 +2,7 @@ package pl.coderslab.sportseventapi.service;
 
 import com.github.javafaker.Faker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.coderslab.sportseventapi.entity.Competition;
 import pl.coderslab.sportseventapi.entity.Game;
@@ -75,8 +76,16 @@ public class FakeService {
         return createdGame;
     }
 
+    @Scheduled(cron = "0 * * * * ?")
+    public void regeneratePremierLeague() {
+        Competition competition = new Competition();
+        competition.setId(1);
+        generateGameWeekLeagueSchedule(competition);
+    }
+
+
     public List<Game> generateGameWeekLeagueSchedule(Competition competition) {
-        // get from db all teams from one comptetion
+
         List<Team> teams = teamServiceImpl.findTeamsByCompetitionId(competition.getId());
 
         // shuffle team collection -> list
