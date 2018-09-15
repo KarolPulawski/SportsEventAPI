@@ -14,4 +14,8 @@ public interface GameService {
     List<Game> getAllScheduledGames();
 
     List<Game> getLastGameWeekResults();
+
+    List<Game> findAll();
+
+    List<Game> totalPointsLastFiveMatches(int teamId);
 }

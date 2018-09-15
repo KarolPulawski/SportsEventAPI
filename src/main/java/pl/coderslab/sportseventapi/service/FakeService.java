@@ -82,22 +82,12 @@ public class FakeService {
         return createdGame;
     }
 
-//    @Scheduled(cron = "0 * * * * ?")
-//    public void regeneratePremierLeague() {
-//        Competition competition = new Competition();
-//        competition.setId(1);
-//        generateGameWeekLeagueSchedule(competition);
-//    }
-
-
     public List<Game> generateGameWeekLeagueSchedule(Competition competition) {
 
         List<Team> teams = teamServiceImpl.findTeamsByCompetitionId(competition.getId());
 
-        // shuffle team collection -> list
         Collections.shuffle(teams);
 
-        // create of generated games
         List<Game> games = new ArrayList<>();
         for(int i = 0; i < teams.size()/2; i++) {
             Game game = createGame(teams.get(i*2), teams.get(i*2+1));
@@ -105,55 +95,64 @@ public class FakeService {
             games.add(game);
             gameServiceImpl.saveGameToDb(game);
         }
-
+        saveGameWeekToDb(games);
         return games;
+    }
+
+    public void saveGameWeekToDb(List<Game> gameToArchieve) {
+        for(Game game : gameToArchieve) {
+            gameServiceImpl.saveGameToDb(game);
+        }
+    }
+
+    public void saveGameWeekHistoryToDb(List<Game> gameToArchieve) {
+        for(Game game : gameToArchieve) {
+            game.setHistory(true);
+            game.setActive(false);
+            gameServiceImpl.saveGameToDb(game);
+        }
     }
     
     public List<Game> generateGameWeekResults(List<Game> generateGameWeekLeagueSchedule) {
         List<Game> results = new ArrayList<>();
-
         for(Game g : generateGameWeekLeagueSchedule) {
             results.add(generateGame(g));
         }
 
         for(Game g : results) {
             System.out.println(g.toString());
-            g.setActive(false);
-            g.setHistory(true);
+            g.setActive(true);
+            g.setHistory(false);
             gameServiceImpl.saveGameToDb(g);
         }
-
         return results;
     }
 
-    @Scheduled(cron = "0 * * * * ?")
+//    @Scheduled(cron = "0 * * * * ?")
+    @Scheduled(fixedDelay = 15_000L)
     public void runGameWeek() {
-        Competition competition = new Competition();
-        competition.setId(1);
-//        List<Competition> competitions;
         this.competitions = competitionServiceImpl.findAllCompetitionEnabled();
         this.competitions.forEach(v -> System.out.println(v.getName()));
-
-
-        List<Game> weekGames = generateGameWeekLeagueSchedule(competition);
-        try {
-            Thread.sleep(30_000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        for(Competition competition : this.competitions) {
+            List<Game> weekGames = generateGameWeekLeagueSchedule(competition);
+            try {
+                Thread.sleep(10_000L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            generateGameWeekResults(weekGames);
+            try {
+                Thread.sleep(10_000L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            saveGameWeekHistoryToDb(weekGames);
         }
-        generateGameWeekResults(weekGames);
     }
 
 
     public void generateOdds(List<Game> games) {
         for(Game g : games) {
-
-//            Odd odd = new Odd();
-
-
-
-
-
 
         }
     }

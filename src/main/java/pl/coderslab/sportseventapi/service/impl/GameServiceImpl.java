@@ -25,7 +25,7 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public List<Game> getAllActiveGame() {
-        return gameRepository.findAllByActiveTrue();
+        return gameRepository.findAllByActiveTrueAndHistoryFalse();
     }
 
     @Override
@@ -36,5 +36,15 @@ public class GameServiceImpl implements GameService {
     @Override
     public List<Game> getLastGameWeekResults() {
         return null;
+    }
+
+    @Override
+    public List<Game> findAll() {
+        return gameRepository.findAll();
+    }
+
+    @Override
+    public List<Game> totalPointsLastFiveMatches(int teamId) {
+        return gameRepository.findTotalPointsLastFiveMatches(teamId);
     }
 }

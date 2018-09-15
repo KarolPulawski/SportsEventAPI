@@ -12,6 +12,7 @@ import pl.coderslab.sportseventapi.entity.Team;
 import pl.coderslab.sportseventapi.repository.CompetitionRepository;
 import pl.coderslab.sportseventapi.repository.TeamRepository;
 import pl.coderslab.sportseventapi.service.FakeService;
+import pl.coderslab.sportseventapi.service.HistoryService;
 import pl.coderslab.sportseventapi.service.JsonService;
 import pl.coderslab.sportseventapi.service.impl.GameServiceImpl;
 import pl.coderslab.sportseventapi.service.impl.OddServiceImpl;
@@ -25,53 +26,43 @@ import java.util.List;
 public class HomeController {
 
     @Autowired
-    private TeamServiceImpl teamServiceImpl;
-
-    @Autowired
     private GameServiceImpl gameServiceImpl;
-
-    @Autowired
-    private OddServiceImpl oddServiceImpl;
 
     @Autowired
     private JsonService jsonService;
 
     @Autowired
-    private CompetitionRepository cr;
+    private HistoryService historyService;
 
-    @Autowired
-    private FakeService fakeService;
 
     @RequestMapping(method = RequestMethod.GET, path = "/hello")
     @ResponseBody
     public String hello() {
-        Competition competition = new Competition();
-        competition.setId(1);
-        competition.setName("Premier League");
-//        fakeService.runGameWeek(competition);
+        Team team = new Team();
+        team.setId(1);
+        int i = historyService.lastFiveMatchesTotalPoints(team);
+        System.out.println("points:" + i);
         return "login_page";
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/gameWeekSchedule")
-    public String gameWeekSchedule(Model model) {
-
+    public String gameWeekSchedule() {
         List<Game> games = gameServiceImpl.getAllScheduledGames();
-
         jsonService.createJsonFromGameList(games);
         return jsonService.getJsonGames().toString();
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/gameWeekResults")
     public String gameWeekResults() {
-
         List<Game> results = gameServiceImpl.getAllActiveGame();
-
-        List<Competition> competitions = cr.findAll();
-        for(Competition c : competitions) {
-            System.out.println(c.getName());
-        }
-
         jsonService.createJsonFromGameList(results);
         return jsonService.getJsonGames().toString();
     }
+
+//    @RequestMapping(method = RequestMethod.GET, path = "/history")
+//    public String history() {
+//        List<Game> historyResults = gameServiceImpl.totalPointsLastFiveMatches(1);
+//        jsonService.createJsonFromGameList(historyResults);
+//
+//    }
 }
