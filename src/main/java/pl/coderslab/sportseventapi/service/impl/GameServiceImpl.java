@@ -47,4 +47,14 @@ public class GameServiceImpl implements GameService {
     public List<Game> totalPointsLastFiveMatches(int teamId) {
         return gameRepository.findTotalPointsLastFiveMatches(teamId);
     }
+
+    @Override
+    public List<Game> totalPointsLastThreeHomeMatches(int teamId) {
+        return gameRepository.findTotalPointsLastThreeMatchesHome(teamId);
+    }
+
+    @Override
+    public List<Game> totalPointsLastThreeAwayMatches(int teamId) {
+        return gameRepository.findTotalPointsLastThreeMatchesAway(teamId);
+    }
 }

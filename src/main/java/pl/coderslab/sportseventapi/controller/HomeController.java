@@ -1,24 +1,13 @@
 package pl.coderslab.sportseventapi.controller;
 
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import pl.coderslab.sportseventapi.entity.Competition;
 import pl.coderslab.sportseventapi.entity.Game;
 import pl.coderslab.sportseventapi.entity.Team;
-import pl.coderslab.sportseventapi.repository.CompetitionRepository;
-import pl.coderslab.sportseventapi.repository.TeamRepository;
-import pl.coderslab.sportseventapi.service.FakeService;
-import pl.coderslab.sportseventapi.service.HistoryService;
+import pl.coderslab.sportseventapi.service.StatisticService;
 import pl.coderslab.sportseventapi.service.JsonService;
 import pl.coderslab.sportseventapi.service.impl.GameServiceImpl;
-import pl.coderslab.sportseventapi.service.impl.OddServiceImpl;
-import pl.coderslab.sportseventapi.service.impl.TeamServiceImpl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -32,7 +21,7 @@ public class HomeController {
     private JsonService jsonService;
 
     @Autowired
-    private HistoryService historyService;
+    private StatisticService statisticService;
 
 
     @RequestMapping(method = RequestMethod.GET, path = "/hello")
@@ -40,8 +29,10 @@ public class HomeController {
     public String hello() {
         Team team = new Team();
         team.setId(1);
-        int i = historyService.lastFiveMatchesTotalPoints(team);
+        int i = statisticService.lastFiveMatchesTotalPoints(team);
         System.out.println("points:" + i);
+        System.out.println("last 3 home" + statisticService.lastThreeMatchesHomeTotalPoints(team));
+        System.out.println("last 3 away" + statisticService.lastThreeMatchesAwayTotalPoints(team));
         return "login_page";
     }
 

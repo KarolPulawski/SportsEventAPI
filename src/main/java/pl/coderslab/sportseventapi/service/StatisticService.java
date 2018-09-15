@@ -9,9 +9,7 @@ import pl.coderslab.sportseventapi.service.impl.GameServiceImpl;
 import java.util.List;
 
 @Service
-public class HistoryService {
-
-    public int number = 5;
+public class StatisticService {
 
     @Autowired
     private GameService gameServiceImpl;
@@ -30,6 +28,25 @@ public class HistoryService {
                 counter++;
             }
             if (counter == 5) break;
+        }
+        return totalPoints;
+    }
+
+    public int lastThreeMatchesHomeTotalPoints(Team team) {
+        List<Game> games = gameServiceImpl.totalPointsLastThreeHomeMatches(team.getId());
+        int totalPoints = 0;
+
+        for(int i = 0; i < 3; i++) {
+            totalPoints += games.get(i).getHomePoint();
+        }
+        return totalPoints;
+    }
+
+    public int lastThreeMatchesAwayTotalPoints(Team team) {
+        int totalPoints = 0;
+        List<Game> games = gameServiceImpl.totalPointsLastThreeAwayMatches(team.getId());
+        for(int i = 0; i < 3; i++) {
+            totalPoints += games.get(i).getAwayPoint();
         }
         return totalPoints;
     }

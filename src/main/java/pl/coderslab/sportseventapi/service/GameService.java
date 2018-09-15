@@ -18,4 +18,7 @@ public interface GameService {
     List<Game> findAll();
 
     List<Game> totalPointsLastFiveMatches(int teamId);
+
+    List<Game> totalPointsLastThreeHomeMatches(int teamId);
+    List<Game> totalPointsLastThreeAwayMatches(int teamId);
 }
