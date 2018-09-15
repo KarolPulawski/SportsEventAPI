@@ -16,6 +16,6 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     public List<Competition> findAllCompetitionEnabled() {
-        return competitionRepository.findAllByEnabled();
+        return competitionRepository.findByEnabled(true);
     }
 }

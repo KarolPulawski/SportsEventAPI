@@ -32,7 +32,7 @@ public class Competition {
         this.name = name;
     }
 
-    public boolean isEnabled() {
+    public boolean getEnabled() {
         return enabled;
     }
 

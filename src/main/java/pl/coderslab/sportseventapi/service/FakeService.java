@@ -8,6 +8,7 @@ import pl.coderslab.sportseventapi.entity.Competition;
 import pl.coderslab.sportseventapi.entity.Game;
 import pl.coderslab.sportseventapi.entity.Odd;
 import pl.coderslab.sportseventapi.entity.Team;
+import pl.coderslab.sportseventapi.service.impl.CompetitionServiceImpl;
 import pl.coderslab.sportseventapi.service.impl.GameServiceImpl;
 import pl.coderslab.sportseventapi.service.impl.OddServiceImpl;
 import pl.coderslab.sportseventapi.service.impl.TeamServiceImpl;
@@ -29,6 +30,11 @@ public class FakeService {
 
     @Autowired
     private GameServiceImpl gameServiceImpl;
+
+    @Autowired
+    private CompetitionServiceImpl competitionServiceImpl;
+
+    private List<Competition> competitions;
 
     public FakeService() {
         this.faker = new Faker();
@@ -124,6 +130,11 @@ public class FakeService {
     public void runGameWeek() {
         Competition competition = new Competition();
         competition.setId(1);
+//        List<Competition> competitions;
+        this.competitions = competitionServiceImpl.findAllCompetitionEnabled();
+        this.competitions.forEach(v -> System.out.println(v.getName()));
+
+
         List<Game> weekGames = generateGameWeekLeagueSchedule(competition);
         try {
             Thread.sleep(30_000L);

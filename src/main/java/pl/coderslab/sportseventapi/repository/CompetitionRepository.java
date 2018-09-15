@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface CompetitionRepository extends JpaRepository<Competition, Integer> {
-    List<Competition> findAllByEnabled();
+//    List<Competition> findAllByEnabledTrue();
+    List<Competition> findByEnabled(boolean enabled);
 }
