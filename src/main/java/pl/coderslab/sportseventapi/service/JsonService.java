@@ -20,6 +20,7 @@ public class JsonService {
         jsonFromGameList.clear();
         for(Game g : games) {
             JSONObject jObject = new JSONObject();
+            jObject.put("gameId", g.getId());
             jObject.put("teamHome", g.getTeamHome().getName());
             jObject.put("teamAway", g.getTeamAway().getName());
             jObject.put("started", g.getStarted());
