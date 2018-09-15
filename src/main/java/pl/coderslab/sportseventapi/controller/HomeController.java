@@ -39,6 +39,11 @@ public class HomeController {
     @RequestMapping(method = RequestMethod.GET, path = "/gameWeekSchedule")
     public String gameWeekSchedule() {
         List<Game> games = gameServiceImpl.getAllScheduledGames();
+
+        for(Game g : games) {
+            statisticService.generateOdd(g);
+        }
+
         jsonService.createJsonFromGameList(games);
         return jsonService.getJsonGames().toString();
     }

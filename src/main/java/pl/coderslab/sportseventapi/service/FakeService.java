@@ -32,6 +32,9 @@ public class FakeService {
     private GameServiceImpl gameServiceImpl;
 
     @Autowired
+    private StatisticService statisticService;
+
+    @Autowired
     private CompetitionServiceImpl competitionServiceImpl;
 
     private List<Competition> competitions;
@@ -48,8 +51,9 @@ public class FakeService {
         game.setHistory(false);
         game.setStarted(DateService.currentTimeWithDelay(5000));
 
-        Odd odd = new Odd(0.0,0.0,0.0);
-        game.setOdd(oddServiceImpl.saveOdd(odd));
+        Odd odd = statisticService.generateOdd(game);
+        game.setOdd(odd);
+        oddServiceImpl.saveOdd(odd);
         return game;
     }
 

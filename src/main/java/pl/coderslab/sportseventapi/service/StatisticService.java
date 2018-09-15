@@ -3,13 +3,18 @@ package pl.coderslab.sportseventapi.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.coderslab.sportseventapi.entity.Game;
+import pl.coderslab.sportseventapi.entity.Odd;
 import pl.coderslab.sportseventapi.entity.Team;
-import pl.coderslab.sportseventapi.service.impl.GameServiceImpl;
 
 import java.util.List;
 
 @Service
 public class StatisticService {
+
+    private final Integer MAX_HOME_EXPECTATION = 57/5;
+    private final Integer MAX_AWAY_EXPECTATION = 141/10;
+
+    private final Double BETTING_SITE_PERCENTAGE = 1.1;
 
     @Autowired
     private GameService gameServiceImpl;
@@ -49,5 +54,42 @@ public class StatisticService {
             totalPoints += games.get(i).getAwayPoint();
         }
         return totalPoints;
+    }
+
+    public Odd generateOdd(Game game) {
+        int homeTeamLastThree = lastThreeMatchesHomeTotalPoints(game.getTeamHome());
+        int awayTeamLastThree = lastThreeMatchesAwayTotalPoints(game.getTeamAway());
+        int homeTeamLastFive = lastFiveMatchesTotalPoints(game.getTeamHome());
+        int awayTeamLastFive = lastFiveMatchesTotalPoints(game.getTeamAway());
+
+        double homeExpectationPoints = homeTeamLastFive*0.4 + homeTeamLastThree*0.6;
+        double awayExpectationPoints = awayTeamLastFive*0.4 + awayTeamLastThree*0.6*1.5;
+
+        double homeExpectationPercentage = homeExpectationPoints / MAX_HOME_EXPECTATION;
+        double awayExpectationPercentage = awayExpectationPoints / MAX_AWAY_EXPECTATION;
+
+        return calculateOdd(homeExpectationPercentage, awayExpectationPercentage);
+    }
+
+    public Odd calculateOdd(double homeExpactationPercentage, double awayExapctationPercentage) {
+        double difference = homeExpactationPercentage - awayExapctationPercentage;
+        double homeOdd = 0.0;
+        double awayOdd = 0.0;
+
+        if(difference == 0) {
+            homeOdd = 2.5;
+            awayOdd = 2.5;
+        } else if (difference > 0) {
+            homeOdd = Math.exp(1-difference);
+            awayOdd = Math.exp(1+difference);
+        } else if (difference < 0) {
+            homeOdd = Math.exp(1+difference);
+            awayOdd = Math.exp(1-difference);
+        }
+        return new Odd(homeOdd, calculateDrawOdd(homeOdd, awayOdd), awayOdd);
+    }
+
+    private double calculateDrawOdd(double hOdd, double aOdd) {
+        return (hOdd * aOdd) / (BETTING_SITE_PERCENTAGE*aOdd*hOdd - aOdd - hOdd);
     }
 }
