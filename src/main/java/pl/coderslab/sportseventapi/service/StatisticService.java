@@ -26,10 +26,18 @@ public class StatisticService {
 
         for (Game g : games) {
             if (g.getTeamHome().getId() == team.getId()) {
-                totalPoints += g.getHomePoint();
+                try {
+                    totalPoints += g.getHomePoint();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 counter++;
             } else if (g.getTeamAway().getId() == team.getId()) {
-                totalPoints += g.getAwayPoint();
+                try {
+                    totalPoints += g.getAwayPoint();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 counter++;
             }
             if (counter == 5) break;
@@ -42,7 +50,11 @@ public class StatisticService {
         int totalPoints = 0;
 
         for(int i = 0; i < 3; i++) {
-            totalPoints += games.get(i).getHomePoint();
+            try {
+                totalPoints += games.get(i).getHomePoint();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return totalPoints;
     }
@@ -51,7 +63,11 @@ public class StatisticService {
         int totalPoints = 0;
         List<Game> games = gameServiceImpl.totalPointsLastThreeAwayMatches(team.getId());
         for(int i = 0; i < 3; i++) {
-            totalPoints += games.get(i).getAwayPoint();
+            try {
+                totalPoints += games.get(i).getAwayPoint();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return totalPoints;
     }
@@ -81,9 +97,11 @@ public class StatisticService {
             awayOdd = 2.5;
         } else if (difference > 0) {
             homeOdd = Math.exp(1-difference);
-            awayOdd = Math.exp(1+difference);
+//            awayOdd = Math.exp(1+difference);
+            awayOdd = Math.pow(3,1+difference);
         } else if (difference < 0) {
-            homeOdd = Math.exp(1+difference);
+//            homeOdd = Math.exp(1+difference);
+            homeOdd = Math.pow(3,1+difference);
             awayOdd = Math.exp(1-difference);
         }
         return new Odd(homeOdd, calculateDrawOdd(homeOdd, awayOdd), awayOdd);
