@@ -32,7 +32,8 @@ public class FakeService {
 
     private Faker faker;
 
-    private final String URL_SERVER = "http://localhost:8081/api/game";
+    private final String URL_SERVER_SCHEDULED = "http://localhost:8081/api/game";
+    private final String URL_SERVER_RESULT = "http://localhost:8081/api/result";
 
     @Autowired
     private TeamServiceImpl teamServiceImpl;
@@ -214,9 +215,9 @@ public class FakeService {
 //        client.close();
 //    }
 
-    private void sendGameToServer(Game g) throws IOException {
+    private void sendGameToServer(Game g, String url) throws IOException {
         CloseableHttpClient client = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost(URL_SERVER);
+        HttpPost httpPost = new HttpPost(url);
         jsonService.createJsonFromGame(g);
         String json = jsonService.getJsonFromGame().toString();
         StringEntity entity = new StringEntity(json);
@@ -227,13 +228,13 @@ public class FakeService {
         client.close();
     }
 
-    public List<Game> sendScheduledGame() throws IOException {
+    private List<Game> sendScheduledGame() throws IOException {
         List<Game> weekGames = new ArrayList<>();
         this.competitions = competitionServiceImpl.findAllCompetitionEnabled();
         for(Competition competition : this.competitions) {
             weekGames = generateGameWeekLeagueSchedule(competition);
             for(Game g : weekGames) {
-                sendGameToServer(g);
+                sendGameToServer(g, URL_SERVER_SCHEDULED);
             }
         }
         return weekGames;
@@ -241,16 +242,21 @@ public class FakeService {
 
 
 
-    public void sendResultGame(List<Game> currentGame) throws IOException {
+    private void sendResultGame(List<Game> currentGame) throws IOException {
         List<Game> resultGames = generateGameWeekResults(currentGame);
         for(Game g : resultGames) {
-            sendGameToServer(g);
+            sendGameToServer(g, URL_SERVER_RESULT);
         }
     }
 
     @Scheduled(fixedDelay = 1000L)
     public void runGames() throws IOException {
         List<Game> currentGames = sendScheduledGame();
+        try {
+            Thread.sleep(20_000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         sendResultGame(currentGames);
     }
 }

@@ -6,6 +6,7 @@ import pl.coderslab.sportseventapi.entity.Game;
 import pl.coderslab.sportseventapi.entity.Odd;
 import pl.coderslab.sportseventapi.entity.Team;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 @Service
@@ -104,7 +105,12 @@ public class StatisticService {
             homeOdd = Math.pow(3,1+difference);
             awayOdd = Math.exp(1-difference);
         }
-        return new Odd(homeOdd, calculateDrawOdd(homeOdd, awayOdd), awayOdd);
+
+        DecimalFormat df = new DecimalFormat("0.00");
+
+        return new Odd(Double.parseDouble(df.format(homeOdd)),
+                Double.parseDouble(df.format(calculateDrawOdd(homeOdd, awayOdd))),
+                Double.parseDouble(df.format(awayOdd)));
     }
 
     private double calculateDrawOdd(double hOdd, double aOdd) {
