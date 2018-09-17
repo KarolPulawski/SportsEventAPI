@@ -1,6 +1,14 @@
 package pl.coderslab.sportseventapi.service;
 
 import com.github.javafaker.Faker;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -13,6 +21,8 @@ import pl.coderslab.sportseventapi.service.impl.GameServiceImpl;
 import pl.coderslab.sportseventapi.service.impl.OddServiceImpl;
 import pl.coderslab.sportseventapi.service.impl.TeamServiceImpl;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +31,8 @@ import java.util.List;
 public class FakeService {
 
     private Faker faker;
+
+    private final String URL_SERVER = "http://localhost:8081/api/game";
 
     @Autowired
     private TeamServiceImpl teamServiceImpl;
@@ -36,6 +48,9 @@ public class FakeService {
 
     @Autowired
     private CompetitionServiceImpl competitionServiceImpl;
+
+    @Autowired
+    private JsonService jsonService;
 
     private List<Competition> competitions;
 
@@ -154,10 +169,88 @@ public class FakeService {
         }
     }
 
-
     public void generateOdds(List<Game> games) {
         for(Game g : games) {
 
         }
+    }
+
+//    public void sendWhenChangeResult(int counter) throws IOException {
+//        CloseableHttpClient client = HttpClients.createDefault();
+//        HttpPost httpPost = new HttpPost("http://localhost:8081/api/info");
+//
+//        List<NameValuePair> params = new ArrayList<NameValuePair>();
+//        params.add(new BasicNameValuePair("username", "Karol -->" + counter));
+//        params.add(new BasicNameValuePair("password", "pass"));
+//        httpPost.setEntity(new UrlEncodedFormEntity(params));
+//
+////
+////        StringEntity entity = new StringEntity(json);
+////        httpPost.setEntity(entity);
+////        httpPost.setHeader("Accept", "application/json");
+////        httpPost.setHeader("Content-type", "application/json");
+//
+//
+//        CloseableHttpResponse response = client.execute(httpPost);
+//        client.close();
+//    }
+
+//    public void sendJSON(String json) throws IOException {
+//        CloseableHttpClient client = HttpClients.createDefault();
+//        HttpPost httpPost = new HttpPost("http://localhost:8081/api/game");
+//
+////        List<NameValuePair> params = new ArrayList<NameValuePair>();
+////        params.add(new BasicNameValuePair("teamHome", "Chelsea"));
+////        params.add(new BasicNameValuePair("teamAway", "Liverpool"));
+////        httpPost.setEntity(new UrlEncodedFormEntity(params));
+//
+//
+//        StringEntity entity = new StringEntity(json);
+//        httpPost.setEntity(entity);
+//        httpPost.setHeader("Accept", "application/json");
+//        httpPost.setHeader("Content-type", "application/json");
+//
+//        CloseableHttpResponse response = client.execute(httpPost);
+//        client.close();
+//    }
+
+    private void sendGameToServer(Game g) throws IOException {
+        CloseableHttpClient client = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(URL_SERVER);
+        jsonService.createJsonFromGame(g);
+        String json = jsonService.getJsonFromGame().toString();
+        StringEntity entity = new StringEntity(json);
+        httpPost.setEntity(entity);
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+        CloseableHttpResponse response = client.execute(httpPost);
+        client.close();
+    }
+
+    public List<Game> sendScheduledGame() throws IOException {
+        List<Game> weekGames = new ArrayList<>();
+        this.competitions = competitionServiceImpl.findAllCompetitionEnabled();
+        for(Competition competition : this.competitions) {
+            weekGames = generateGameWeekLeagueSchedule(competition);
+            for(Game g : weekGames) {
+                sendGameToServer(g);
+            }
+        }
+        return weekGames;
+    }
+
+
+
+    public void sendResultGame(List<Game> currentGame) throws IOException {
+        List<Game> resultGames = generateGameWeekResults(currentGame);
+        for(Game g : resultGames) {
+            sendGameToServer(g);
+        }
+    }
+
+    @Scheduled(fixedDelay = 1000L)
+    public void runGames() throws IOException {
+        List<Game> currentGames = sendScheduledGame();
+        sendResultGame(currentGames);
     }
 }
