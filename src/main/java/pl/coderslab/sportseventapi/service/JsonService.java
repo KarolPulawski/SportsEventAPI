@@ -32,6 +32,8 @@ public class JsonService {
             jObject.put("started", g.getStarted());
             jObject.put("active", g.getActive());
             jObject.put("history", g.getHistory());
+            jObject.put("finished", g.getHistory());
+            jObject.put("scheduled", g.getScheduled());
             jObject.put("homeGoal", g.getHomeGoal());
             jObject.put("homeCorner", g.getHomeCorner());
             jObject.put("homeYellow", g.getHomeYellow());
@@ -47,6 +49,7 @@ public class JsonService {
             jObject.put("homeOdd", g.getOdd().getHomeOdd());
             jObject.put("drawOdd", g.getOdd().getDrawOdd());
             jObject.put("awayOdd", g.getOdd().getAwayOdd());
+            jObject.put("competition", g.getCompetition().getName());
             jsonFromGameList.add(jObject);
         }
     }
@@ -59,6 +62,8 @@ public class JsonService {
         jObject.put("started", g.getStarted());
         jObject.put("active", g.getActive());
         jObject.put("history", g.getHistory());
+        jObject.put("scheduled", g.getScheduled());
+        jObject.put("finished", g.getFinished());
         jObject.put("homeGoal", g.getHomeGoal());
         jObject.put("homeCorner", g.getHomeCorner());
         jObject.put("homeYellow", g.getHomeYellow());
@@ -74,6 +79,7 @@ public class JsonService {
         jObject.put("homeOdd", g.getOdd().getHomeOdd());
         jObject.put("drawOdd", g.getOdd().getDrawOdd());
         jObject.put("awayOdd", g.getOdd().getAwayOdd());
+        jObject.put("competition", g.getCompetition().getName());
         this.jsonFromGame = jObject;
     }
 }

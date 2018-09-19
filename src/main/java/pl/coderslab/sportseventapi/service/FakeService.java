@@ -1,14 +1,11 @@
 package pl.coderslab.sportseventapi.service;
 
 import com.github.javafaker.Faker;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -22,7 +19,6 @@ import pl.coderslab.sportseventapi.service.impl.OddServiceImpl;
 import pl.coderslab.sportseventapi.service.impl.TeamServiceImpl;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -141,8 +137,10 @@ public class FakeService {
 
         for(Game g : results) {
             System.out.println(g.toString());
-            g.setActive(true);
+            g.setScheduled(true);
+            g.setActive(false);
             g.setHistory(false);
+            g.setFinished(true);
             gameServiceImpl.saveGameToDb(g);
         }
         return results;
@@ -234,6 +232,7 @@ public class FakeService {
         for(Competition competition : this.competitions) {
             weekGames = generateGameWeekLeagueSchedule(competition);
             for(Game g : weekGames) {
+                g.setScheduled(true);
                 sendGameToServer(g, URL_SERVER_SCHEDULED);
             }
         }
@@ -245,15 +244,16 @@ public class FakeService {
     private void sendResultGame(List<Game> currentGame) throws IOException {
         List<Game> resultGames = generateGameWeekResults(currentGame);
         for(Game g : resultGames) {
+            g.setFinished(true);
             sendGameToServer(g, URL_SERVER_RESULT);
         }
     }
 
-    @Scheduled(fixedDelay = 1000L)
+    @Scheduled(fixedDelay = 500L)
     public void runGames() throws IOException {
         List<Game> currentGames = sendScheduledGame();
         try {
-            Thread.sleep(20_000L);
+            Thread.sleep(10_000L);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -26,6 +26,8 @@ public class Game {
 
     private Boolean active;
     private Boolean history;
+    private Boolean finished;
+    private Boolean scheduled;
 
     private int homeGoal;
     private int homeCorner;
@@ -232,5 +234,21 @@ public class Game {
 
     public void setAwayPoint(int awayPoint) {
         this.awayPoint = awayPoint;
+    }
+
+    public Boolean getFinished() {
+        return finished;
+    }
+
+    public void setFinished(Boolean finished) {
+        this.finished = finished;
+    }
+
+    public Boolean getScheduled() {
+        return scheduled;
+    }
+
+    public void setScheduled(Boolean scheduled) {
+        this.scheduled = scheduled;
     }
 }

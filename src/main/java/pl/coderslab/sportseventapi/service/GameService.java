@@ -9,13 +9,13 @@ import java.util.List;
 public interface GameService {
     void saveGameToDb(Game game);
 
-    List<Game> getAllActiveGame();
-
-    List<Game> getAllScheduledGames();
-
     List<Game> getLastGameWeekResults();
 
     List<Game> findAll();
+
+    List<Game> getAllActiveGame();
+
+    List<Game> getAllScheduledGames();
 
     List<Game> totalPointsLastFiveMatches(int teamId);
 
