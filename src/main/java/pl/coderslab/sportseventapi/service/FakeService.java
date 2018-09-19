@@ -19,8 +19,12 @@ import pl.coderslab.sportseventapi.service.impl.OddServiceImpl;
 import pl.coderslab.sportseventapi.service.impl.TeamServiceImpl;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -55,13 +59,19 @@ public class FakeService {
         this.faker = new Faker();
     }
 
-    public Game createGame(Team teamHome, Team teamAway) {
+    public Game createGame(Team teamHome, Team teamAway) throws ParseException {
         Game game = new Game();
         game.setTeamHome(teamHome);
         game.setTeamAway(teamAway);
         game.setActive(false);
         game.setHistory(false);
-        game.setStarted(DateService.currentTimeWithDelay(5000));
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateString = dateFormat.format(new Timestamp(System.currentTimeMillis() + 5000));
+        Date date = dateFormat.parse(dateString);
+        Timestamp timestamp = new Timestamp(date.getTime());
+
+        game.setStarted(timestamp);
 
         Odd odd = statisticService.generateOdd(game);
         game.setOdd(odd);
@@ -98,7 +108,7 @@ public class FakeService {
         return createdGame;
     }
 
-    public List<Game> generateGameWeekLeagueSchedule(Competition competition) {
+    public List<Game> generateGameWeekLeagueSchedule(Competition competition) throws ParseException {
 
         List<Team> teams = teamServiceImpl.findTeamsByCompetitionId(competition.getId());
 
@@ -148,7 +158,7 @@ public class FakeService {
 
 //    @Scheduled(cron = "0 * * * * ?")
     @Scheduled(fixedDelay = 15_000L)
-    public void runGameWeek() {
+    public void runGameWeek() throws ParseException {
         this.competitions = competitionServiceImpl.findAllCompetitionEnabled();
         this.competitions.forEach(v -> System.out.println(v.getName()));
         for(Competition competition : this.competitions) {
@@ -226,7 +236,7 @@ public class FakeService {
         client.close();
     }
 
-    private List<Game> sendScheduledGame() throws IOException {
+    private List<Game> sendScheduledGame() throws IOException, ParseException {
         List<Game> weekGames = new ArrayList<>();
         this.competitions = competitionServiceImpl.findAllCompetitionEnabled();
         for(Competition competition : this.competitions) {
@@ -234,6 +244,11 @@ public class FakeService {
             for(Game g : weekGames) {
                 g.setScheduled(true);
                 sendGameToServer(g, URL_SERVER_SCHEDULED);
+                try {
+                    Thread.sleep(500L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return weekGames;
@@ -246,11 +261,16 @@ public class FakeService {
         for(Game g : resultGames) {
             g.setFinished(true);
             sendGameToServer(g, URL_SERVER_RESULT);
+            try {
+                Thread.sleep(500L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     @Scheduled(fixedDelay = 500L)
-    public void runGames() throws IOException {
+    public void runGames() throws IOException, ParseException {
         List<Game> currentGames = sendScheduledGame();
         try {
             Thread.sleep(10_000L);
