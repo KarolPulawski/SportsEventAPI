@@ -146,7 +146,6 @@ public class FakeService {
         }
 
         for(Game g : results) {
-            System.out.println(g.toString());
             g.setScheduled(true);
             g.setActive(false);
             g.setHistory(false);
@@ -156,11 +155,9 @@ public class FakeService {
         return results;
     }
 
-//    @Scheduled(cron = "0 * * * * ?")
     @Scheduled(fixedDelay = 15_000L)
     public void runGameWeek() throws ParseException {
         this.competitions = competitionServiceImpl.findAllCompetitionEnabled();
-        this.competitions.forEach(v -> System.out.println(v.getName()));
         for(Competition competition : this.competitions) {
             List<Game> weekGames = generateGameWeekLeagueSchedule(competition);
             try {
@@ -183,45 +180,6 @@ public class FakeService {
 
         }
     }
-
-//    public void sendWhenChangeResult(int counter) throws IOException {
-//        CloseableHttpClient client = HttpClients.createDefault();
-//        HttpPost httpPost = new HttpPost("http://localhost:8081/api/info");
-//
-//        List<NameValuePair> params = new ArrayList<NameValuePair>();
-//        params.add(new BasicNameValuePair("username", "Karol -->" + counter));
-//        params.add(new BasicNameValuePair("password", "pass"));
-//        httpPost.setEntity(new UrlEncodedFormEntity(params));
-//
-////
-////        StringEntity entity = new StringEntity(json);
-////        httpPost.setEntity(entity);
-////        httpPost.setHeader("Accept", "application/json");
-////        httpPost.setHeader("Content-type", "application/json");
-//
-//
-//        CloseableHttpResponse response = client.execute(httpPost);
-//        client.close();
-//    }
-
-//    public void sendJSON(String json) throws IOException {
-//        CloseableHttpClient client = HttpClients.createDefault();
-//        HttpPost httpPost = new HttpPost("http://localhost:8081/api/game");
-//
-////        List<NameValuePair> params = new ArrayList<NameValuePair>();
-////        params.add(new BasicNameValuePair("teamHome", "Chelsea"));
-////        params.add(new BasicNameValuePair("teamAway", "Liverpool"));
-////        httpPost.setEntity(new UrlEncodedFormEntity(params));
-//
-//
-//        StringEntity entity = new StringEntity(json);
-//        httpPost.setEntity(entity);
-//        httpPost.setHeader("Accept", "application/json");
-//        httpPost.setHeader("Content-type", "application/json");
-//
-//        CloseableHttpResponse response = client.execute(httpPost);
-//        client.close();
-//    }
 
     private void sendGameToServer(Game g, String url) throws IOException {
         CloseableHttpClient client = HttpClients.createDefault();
@@ -253,8 +211,6 @@ public class FakeService {
         }
         return weekGames;
     }
-
-
 
     private void sendResultGame(List<Game> currentGame) throws IOException {
         List<Game> resultGames = generateGameWeekResults(currentGame);

@@ -26,3 +26,7 @@
 
 *.txt
 *.class
+
+mvnw
+mvnw.cmd
+*.mvn/
