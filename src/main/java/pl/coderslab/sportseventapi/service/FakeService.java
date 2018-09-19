@@ -104,7 +104,6 @@ public class FakeService {
             createdGame.setHomePoint(0);
             createdGame.setAwayPoint(3);
         }
-
         return createdGame;
     }
 
@@ -218,7 +217,7 @@ public class FakeService {
             g.setFinished(true);
             sendGameToServer(g, URL_SERVER_RESULT);
             try {
-                Thread.sleep(500L);
+                Thread.sleep(1000L);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -229,7 +228,7 @@ public class FakeService {
     public void runGames() throws IOException, ParseException {
         List<Game> currentGames = sendScheduledGame();
         try {
-            Thread.sleep(10_000L);
+            Thread.sleep(15_000L);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
