@@ -32,8 +32,8 @@ public class FakeService {
 
     private Faker faker;
 
-    private final String URL_SERVER_SCHEDULED = "http://localhost:8081/api/game";
-    private final String URL_SERVER_RESULT = "http://localhost:8081/api/result";
+    private final String URL_SERVER_SCHEDULED = "http://localhost:8081/games/game";
+    private final String URL_SERVER_RESULT = "http://localhost:8081/games/result";
 
     @Autowired
     private TeamServiceImpl teamServiceImpl;
