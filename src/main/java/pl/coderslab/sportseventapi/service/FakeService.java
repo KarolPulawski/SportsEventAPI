@@ -154,29 +154,23 @@ public class FakeService {
         return results;
     }
 
-    @Scheduled(fixedDelay = 15_000L)
+    @Scheduled(fixedDelay = 20_000L)
     public void runGameWeek() throws ParseException {
         this.competitions = competitionServiceImpl.findAllCompetitionEnabled();
         for(Competition competition : this.competitions) {
             List<Game> weekGames = generateGameWeekLeagueSchedule(competition);
             try {
-                Thread.sleep(10_000L);
+                Thread.sleep(20_000L);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             generateGameWeekResults(weekGames);
             try {
-                Thread.sleep(10_000L);
+                Thread.sleep(20_000L);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             saveGameWeekHistoryToDb(weekGames);
-        }
-    }
-
-    public void generateOdds(List<Game> games) {
-        for(Game g : games) {
-
         }
     }
 
